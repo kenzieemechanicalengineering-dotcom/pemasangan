@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Informasi Kenzie Engineering</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="page-login" class="page active">
+        <img src="logo.jpg" alt="Logo Kenzie" class="app-logo" onerror="this.style.display='none'">
+        <p class="slogan">Enjoyneering Extraordinary Experience....</p>
+        <div class="reminder-box">
+            <h3 style="margin: 0 0 5px 0; color: #856404;">⚠️ PENGINGAT JADWAL LAPOR</h3>
+            <p style="margin: 0;">Wajib melakukan pelaporan pada jam:</p>
+            <h2 style="margin: 5px 0 0 0;">16:00 & 23:00</h2>
+        </div>
+        <form id="login-form">
+            <div class="form-group"><label>Username</label><input type="text" id="username" class="form-input" required placeholder="Contoh: wawan"></div>
+            <div class="form-group"><label>Password</label><input type="password" id="password" class="form-input" required></div>
+            <button type="submit" class="btn btn-primary">Login</button>
+            <p id="error-message" style="color: red; display: none; text-align: center; margin-top: 10px;">Username atau password salah!</p>
+        </form>
+    </div>
+
+    <div id="page-dashboard" class="page">
+        <img src="logo.jpg" alt="Logo Perusahaan" class="app-logo" onerror="this.style.display='none'">
+        <h1>Dashboard Admin</h1>
+        <p style="text-align: center;">Halo, <span id="admin-name-display" style="font-weight: bold;">Admin</span></p>
+        <div class="menu-grid">
+            <a class="menu-button view-report" onclick="showPage('page-view-reports')">📂 Lihat Laporan Masuk</a>
+            <a class="menu-button invoice" onclick="showPage('page-invoice')">📄 Buat Invoice Project</a>
+        </div>
+        <a class="btn-back" onclick="logout()" style="margin-top: 30px; text-align: center; display: block;">Logout</a>
+    </div>
+
+    <div id="page-laporan" class="page">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0;">Laporan Harian</h2>
+            <button onclick="logout()" style="background: none; border: none; color: red; cursor: pointer; font-weight: bold;">Logout</button>
+        </div>
+        <p style="text-align: center; margin-bottom: 20px;">User: <span id="user-name-display" style="font-weight: bold; color: var(--primary-color);"></span></p>
+        <button class="btn btn-info" onclick="renderEmployeeHistory()" style="margin-bottom: 20px;">📜 Lihat Riwayat & Komentar Admin</button>
+        <form id="report-form">
+            <div class="form-group"><label>Tanggal Pekerjaan</label><input type="date" id="tanggal-laporan" class="form-input" required></div>
+            <div class="form-group"><label>Catatan / Keterangan</label><textarea id="catatan" class="form-input" placeholder="Apa yang dikerjakan hari ini?" required></textarea></div>
+            <div class="form-group"><label>Upload Foto Bukti</label><input type="file" id="foto-laporan" class="form-input" accept="image/*" required></div>
+            <button type="submit" class="btn btn-success">Kirim Laporan</button>
+        </form>
+    </div>
+
+    <div id="page-employee-history" class="page">
+        <a class="btn-back" onclick="showPage('page-laporan')">← Kembali ke Form Laporan</a>
+        <h2>Riwayat Laporan Saya</h2>
+        <div id="employee-history-list"></div>
+    </div>
+
+    <div id="page-view-reports" class="page">
+        <a class="btn-back" onclick="showPage('page-dashboard')">← Kembali ke Dashboard</a>
+        <h2>Laporan Masuk</h2>
+        <div id="report-list-container">
+            <p id="no-reports-message" style="text-align: center; color: #777;">Belum ada laporan.</p>
+        </div>
+    </div>
+
+    <div id="page-invoice" class="page">
+        <a class="btn-back" onclick="showPage('page-dashboard')">← Kembali ke Dashboard</a>
+        <h2>Form Invoice</h2>
+        <form id="invoice-form">
+            <div class="form-group"><label>Tanggal</label><input type="date" id="inv-date" class="form-input"></div>
+            <div class="form-group"><label>Nama Customer</label><input type="text" id="inv-customer" class="form-input" placeholder="Contoh: Bpk. Andi"></div>
+            <div class="form-group"><label>Project</label><input type="text" id="inv-project" class="form-input" placeholder="Contoh: Pasang CCTV"></div>
+            <div class="form-group"><label>Lokasi</label><textarea id="inv-lokasi" class="form-input" placeholder="Alamat Customer"></textarea></div>
+            <hr>
+            <div style="display: flex; gap: 10px;">
+                <div class="form-group" style="flex:1;"><label>Garansi Service</label><input type="text" id="inv-garansi-service" class="form-input" value="2 Bulan"></div>
+                <div class="form-group" style="flex:1;"><label>Garansi Perangkat</label><input type="text" id="inv-garansi-part" class="form-input" value="1 Tahun"></div>
+            </div>
+            <hr>
+            <div class="section-title">
+                <span>Rincian Pengeluaran (Detail Item)</span>
+                <button type="button" onclick="addItem()" style="background: var(--primary-color); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; position:relative; z-index:50;">+ Tambah Item</button>
+            </div>
+            <div id="items-container"></div>
+            
+            <div class="total-section"><span>Total Pengeluaran:</span> <span id="grand-total-pengeluaran">Rp 0</span></div>
+
+            <div class="section-title" style="background-color: #e2e6ea; border: 1px solid #ccc;">
+                <span>Resume Pengeluaran (Rekap)</span>
+                <button type="button" onclick="addResumeItem()" style="background: var(--secondary-color); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; position:relative; z-index:50;">+ Tambah Resume</button>
+            </div>
+            <div id="resume-container"></div>
+
+            <div class="form-group" style="margin-top: 20px; background: #fff3cd; padding: 15px; border: 1px solid #ffeeba; border-radius: 8px;">
+                <label style="font-size: 1.1em; color: #856404;">Total Rencana Biaya (Input Nominal Deposit/Kasbon)</label>
+                <input type="number" id="inv-dp" class="form-input" placeholder="Masukkan angka deposit..." oninput="calcTotal()" style="font-weight: bold; color: #007bff;">
+                <div style="margin-top: 10px; font-weight: bold; border-top: 1px dashed #999; padding-top: 5px;">
+                    <div style="display: flex; justify-content: space-between;"><span>Total Rencana (Deposit):</span> <span id="grand-total-rencana">Rp 0</span></div>
+                    <div style="display: flex; justify-content: space-between; color: red; margin-top: 5px;"><span>Total Kekurangan (Deposit - Pengeluaran):</span> <span id="grand-total-kekurangan">Rp 0</span></div>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; position: relative; z-index: 100;">
+                <button type="button" class="btn btn-secondary" onclick="printInvoice()">🖨️ Print</button>
+                <button type="button" class="btn btn-danger" onclick="downloadPDF()">📥 Download PDF</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="print-container">
+        <div class="invoice-container">
+            <div class="print-header">
+                <div class="logo"><img src="logo.jpg" alt="Logo" onerror="this.style.display='none'"></div>
+                <div class="company-details">
+                    <h1 class="company-name">Kenzie Engineering & Mechanical</h1>
+                    <p class="address">Balongsari Krajan 1 No.60, Kec.Tandes, Kel,Balongsari<br>Surabaya Barat, Jawa Timur 60186</p>
+                    <p class="coordinates">Latitude : 7*26"55 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Longitude : 112*44'18</p>
+                </div>
+            </div>
+            <div class="meta-grid">
+                <div class="meta-left">
+                    <div class="meta-row"><div class="meta-label">Customer</div><div class="meta-separator">:</div><div class="meta-value"><span id="print-customer">-</span></div></div>
+                    <div class="meta-row"><div class="meta-label">Lokasi</div><div class="meta-separator">:</div><div class="meta-value"><span id="print-lokasi"></span><div class="dotted-line"></div><div class="dotted-line"></div></div></div>
+                </div>
+                <div class="meta-right">
+                    <div class="meta-row"><div class="meta-label">Tanggal</div><div class="meta-separator">:</div><div class="meta-value"><span id="print-date" style="font-weight: bold; text-decoration: underline;">-</span></div></div>
+                    <div class="meta-row"><div class="meta-label">Project</div><div class="meta-separator">:</div><div class="meta-value"><span id="print-project" style="text-decoration: underline;">-</span></div></div>
+                </div>
+            </div>
+            <h4 style="margin: 10px 0 5px 0; text-transform: uppercase;">Rincian Pengeluaran</h4>
+            <table class="main-table custom-table">
+                <thead><tr><th>No</th><th>Tanggal</th><th>Uraian</th><th>Harga</th><th>Banyaknya</th><th>Jumlah</th><th>Keterangan</th></tr></thead>
+                <tbody id="print-tbody-detail"></tbody>
+                <tfoot>
+                    <tr class="garansi-row"><td colspan="7">GARANSI SERVICE <span id="print-garansi-service-table"></span></td></tr>
+                    <tr class="total-row"><td colspan="5" style="text-align: center;">Jumlah Pengeluaran</td><td class="text-right" id="print-sum-pengeluaran">Rp 0</td><td></td></tr>
+                </tfoot>
+            </table>
+            <div class="section-header">RESUME PENGELUARAN :</div>
+            <table class="custom-table">
+                <thead><tr><th class="col-no">No</th><th>Jenis Pengeluaran</th><th class="col-rp">Jumlah</th><th>Keterangan</th></tr></thead>
+                <tbody id="print-tbody-resume"></tbody>
+                <tfoot>
+                    <tr class="garansi-row"><td colspan="4">GARANSI SERVICE <span id="print-garansi-service-resume"></span></td></tr>
+                    <tr class="total-row"><td colspan="2" style="text-align: left;">Jumlah Pengeluaran Operasional</td><td class="text-right" id="print-sum-resume">Rp 0</td><td></td></tr>
+                </tfoot>
+            </table>
+            <div class="payment-summary">
+                <div class="row"><span class="label">Total Rencana Biaya (Total dari Pengajuan Deposit/Kasbon)</span><span class="value" id="print-val-rencana">Rp 0</span></div>
+                <div class="row bg-green"><span class="label">Total Kekurangan Biaya</span><span class="value" id="print-val-kekurangan">Rp 0</span></div>
+                <div class="row bg-green" style="border-top:1px solid #000;"><span class="label" style="width:100%;">E-Payment : BCA 4630032496 a/n Bambang Mochammad Satriyawan</span></div>
+            </div>
+            <div class="signatures">
+                <div><p>Technician</p><div class="signature-space"></div><p><u>Bambang M Satryawan</u></p></div>
+                <div><p>Customer (Menyetujui)</p><div class="signature-space"></div><p>( <span id="print-sign-customer" style="padding: 0 5px;">........................</span> )</p></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

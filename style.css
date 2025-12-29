@@ -1,0 +1,188 @@
+/* ================================================== */
+/* ==                  STYLING CSS                 == */
+/* ================================================== */
+
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --light-gray: #f0f2f5;
+    --border-color: #dfe1e5;
+    --text-color: #333;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background-color: var(--light-gray);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+}
+
+/* Kontainer Halaman */
+.page {
+    display: none;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    box-sizing: border-box;
+    position: relative;
+}
+.page.active { display: block; }
+
+/* Tombol */
+.btn {
+    width: 100%; padding: 12px; font-size: 1em; font-weight: 600;
+    border-radius: 8px; border: none; cursor: pointer;
+    color: white; transition: background-color 0.2s;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 50;
+}
+.btn-primary { background-color: var(--primary-color); }
+.btn-secondary { background-color: var(--secondary-color); }
+.btn-success { background-color: var(--success-color); }
+.btn-danger { background-color: var(--danger-color); }
+.btn-info { background-color: #17a2b8; } 
+
+.btn-back {
+    display: inline-block; margin-bottom: 20px; color: var(--primary-color);
+    text-decoration: none; font-weight: 600; cursor: pointer;
+    position: relative; z-index: 50;
+}
+
+/* Form Elements */
+h1, h2, h3, h4 { text-align: center; color: #333; margin-bottom: 10px; }
+
+.form-group { 
+    margin-bottom: 1rem; 
+    text-align: left; 
+    position: relative; 
+    z-index: 10; 
+}
+
+.form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9em; }
+
+.form-input {
+    width: 100%; padding: 10px; border: 1px solid var(--border-color);
+    border-radius: 6px; font-size: 0.95em; box-sizing: border-box;
+    background-color: #fff;
+    position: relative; z-index: 20;
+}
+textarea.form-input { min-height: 60px; resize: vertical; }
+
+/* Logo Style */
+.app-logo {
+    display: block; margin: 0 auto 10px auto;
+    max-width: 120px; height: auto;
+    pointer-events: none;
+}
+.slogan {
+    text-align: center; font-style: italic; color: #555; font-size: 0.9em; margin-bottom: 20px; font-weight: 500;
+}
+
+/* Reminder Box */
+.reminder-box {
+    background-color: #fff3cd; color: #856404; padding: 15px; border: 1px solid #ffeeba; border-radius: 8px; margin-bottom: 20px; text-align: center; font-size: 0.95em;
+    position: relative; z-index: 5;
+}
+
+/* Menu Grid */
+.menu-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 1rem; }
+.menu-button {
+    display: block; padding: 20px; color: white; text-decoration: none;
+    text-align: center; font-weight: 600; font-size: 1.1em;
+    border-radius: 10px; cursor: pointer;
+    position: relative; z-index: 50;
+}
+.menu-button.invoice { background-color: var(--primary-color); }
+.menu-button.view-report { background-color: var(--warning-color); color: #333; }
+
+/* Report Styles */
+#report-list-container, #employee-history-list { margin-top: 20px; display: flex; flex-direction: column; gap: 15px; }
+.report-card {
+    border: 1px solid var(--border-color); border-radius: 8px;
+    padding: 15px; background-color: #fdfdfd;
+}
+.report-card img { width: 100%; border-radius: 6px; margin-top: 10px; }
+
+.admin-comment-display {
+    background-color: #d4edda; color: #155724;
+    padding: 10px; border-radius: 6px; margin-top: 10px;
+    border-left: 5px solid #28a745; font-size: 0.95em;
+}
+
+/* --- CSS INVOICE FORM --- */
+#page-invoice .item-block, #page-invoice .resume-block { 
+    border: 1px dashed var(--border-color); padding: 15px; 
+    border-radius: 8px; margin-bottom: 10px; background: #fafafa; 
+}
+.section-title {
+    background: #eee; padding: 10px; border-radius: 5px; margin-top: 20px; margin-bottom: 10px; font-weight: bold;
+    display: flex; justify-content: space-between; align-items: center;
+}
+
+#page-invoice .price-wrapper { position: relative; }
+#page-invoice .price-prefix { position: absolute; top: 50%; left: 10px; transform: translateY(-50%); color: #555; font-weight: bold; pointer-events: none; z-index: 30; }
+#page-invoice .price-input { padding-left: 40px !important; }
+
+#page-invoice .total-section { display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1em; border-top: 2px solid #ddd; padding-top: 10px; margin-top: 10px; }
+#grand-total-pengeluaran { color: #333; }
+#grand-total-rencana { color: var(--primary-color); }
+#grand-total-kekurangan { color: var(--danger-color); }
+
+/* ================================================== */
+/* ==         TAMPILAN CETAK (A4 PRINT)            == */
+/* ================================================== */
+#print-container { position: fixed; left: -9999px; top: 0; width: 210mm; background: #fff; color: #000; z-index: -1; }
+#print-container .invoice-container { padding: 20px 30px; font-family: Arial, sans-serif; font-size: 10px; background: white; }
+
+.print-header { display: flex; align-items: center; margin-bottom: 5px; gap: 20px; }
+.print-header .logo img { width: 90px; height: auto; }
+.print-header .company-details { text-align: left; }
+.print-header .company-name { font-family: 'Arial Black', Arial, sans-serif; font-size: 16pt; margin: 0; color: #009900; text-shadow: 1px 1px 0px #0000AA; text-decoration: underline; }
+.print-header .address { margin: 2px 0 0 0; font-size: 9pt; line-height: 1.2; }
+.print-header .coordinates { margin: 2px 0 0 0; color: #00AA00; font-style: italic; font-weight: bold; font-family: "Times New Roman", Times, serif; font-size: 9pt; }
+
+.meta-grid { display: flex; justify-content: space-between; margin-top: 15px; align-items: flex-start; }
+.meta-left { width: 60%; } .meta-right { width: 35%; }
+.meta-row { display: flex; margin-bottom: 3px; align-items: flex-start; }
+.meta-label { width: 70px; font-weight: bold; }
+.meta-separator { margin-right: 5px; }
+.meta-value { flex: 1; }
+.dotted-line { border-bottom: 1px dashed #000; display: inline-block; width: 100%; min-height: 12px; }
+
+.section-header { font-weight: bold; text-transform: uppercase; margin-top: 15px; margin-bottom: 2px; font-size: 10px;}
+
+table.custom-table { width: 100%; border-collapse: collapse; margin-bottom: 5px; font-size: 9px; border: 2px solid #000; }
+table.custom-table th, table.custom-table td { border: 1px solid #000; padding: 4px; vertical-align: middle; }
+table.custom-table th { background-color: #fff; text-align: center; font-weight: bold; border-bottom: 2px solid #000; }
+table.custom-table .col-no { width: 25px; text-align: center; }
+table.custom-table .col-tgl { width: 60px; text-align: center; }
+table.custom-table .col-rp { width: 80px; text-align: right; }
+table.custom-table .col-qty { width: 60px; text-align: center; }
+table.custom-table .garansi-row td { background-color: #FFFF00; text-align: center; font-weight: bold; border: 1px solid #000; font-style: italic;}
+table.custom-table .total-row td { font-weight: bold; border-top: 2px solid #000; }
+
+.payment-summary { margin-top: 10px; border: 2px solid #000; font-size: 10px; }
+.payment-summary .row { display: flex; justify-content: space-between; padding: 2px 5px; border-bottom: 1px solid #ddd; }
+.payment-summary .row:last-child { border-bottom: none; }
+.payment-summary .label { font-weight: bold; }
+.payment-summary .value { font-weight: bold; }
+.bg-green { background-color: #00FF00; color: #000; } 
+
+.signatures { display: flex; justify-content: space-between; margin-top: 20px; text-align: center; }
+.signature-space { height: 40px; border-bottom: 1px solid #000; margin-top: 30px; width: 150px; margin-left: auto; margin-right: auto;}
+
+@media print {
+    body * { visibility: hidden; }
+    #print-container, #print-container * { visibility: visible; }
+    #print-container { position: absolute; left: 0; top: 0; width: 100%; padding: 0; }
+    .page { display: none !important; }
+}
